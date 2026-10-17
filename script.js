@@ -138,12 +138,12 @@ function handleTilt(event) {
   if (now - state.lastTiltTime < 1200) return;
 
   // ⬆️ TILT UP (beta > 45°) = SKIP
-  if (beta > 45) {
+  if (beta > 20) {
     state.lastTiltTime = now;
     triggerTilt("skip");
   }
   // ⬇️ TILT DOWN (beta < -25°) = CORRECT (more sensitive)
-  else if (beta < -25) {
+  else if (beta < -20) {
     state.lastTiltTime = now;
     triggerTilt("correct");
   }
@@ -153,21 +153,26 @@ function handleTilt(event) {
 // 🎯 TRIGGER TILT ACTION
 // ================================
 function triggerTilt(result) {
-  els.wordCard.classList.add(result === "correct" ? "flash-correct" : "flash-skip");
-  setTimeout(() => {
-    els.wordCard.classList.remove("flash-correct", "flash-skip");
-  }, 400);
-
+  // 1. Add the correct CSS class (guessed=green, pass=red)
   if (result === "correct") {
+    els.wordCard.classList.add("flash-guessed");
     playCorrectSound();
   } else {
+    els.wordCard.classList.add("flash-pass");
     playSkipSound();
   }
+  
+  // 2. Remove it after 400ms
+  setTimeout(() => {
+    els.wordCard.classList.remove("flash-guessed", "flash-pass");
+  }, 400);
 
+  // 3. Vibration
   if (navigator.vibrate) {
     navigator.vibrate(result === "correct" ? 100 : [50, 50, 50]);
   }
 
+  // 4. Update Score & Word
   handleAnswer(result);
 }
 
