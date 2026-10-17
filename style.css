@@ -203,3 +203,40 @@ button:active {
   background: linear-gradient(135deg, #ff5555, #ff0000) !important; /* RED */
   transform: scale(0.98);
 }
+/* New Decks & Inputs */
+.secondary {
+  background: #1a1a2e;
+  color: #00ffc8;
+  border: 2px solid #00ffc8;
+  padding: 14px;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 1rem;
+  box-shadow: none;
+}
+
+.secondary:active {
+  background: #00ffc8;
+  color: #000;
+}
+
+input[type="text"], textarea {
+  width: 100%;
+  padding: 12px;
+  background: #0f0f1a;
+  color: #fff;
+  border: 2px solid #00ffc8;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+textarea {
+  height: 120px;
+  resize: none;
+}
+
+#createDeck h2 {
+  color: #00ffc8;
+  margin-bottom: 10px;
+}

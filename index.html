@@ -4,10 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
   <title>🎭 Charades — Free Edition</title>
-  <link rel="stylesheet" href="style.css?v=4" />
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
   <div class="app">
@@ -19,11 +17,7 @@
 
       <label>Category</label>
       <select id="category">
-        <option value="movies">🎬 Movies</option>
-        <option value="animals">🐘 Animals</option>
-        <option value="actions">🏃 Actions</option>
-        <option value="bollywood">🎥 Bollywood</option>
-        <option value="vlsi">🧠 VLSI / Electronics</option>
+        <!-- Decks will be injected here by JavaScript -->
       </select>
 
       <label>Time (seconds)</label>
@@ -34,15 +28,33 @@
       </select>
 
       <button id="startBtn" class="primary">▶ START GAME</button>
+      
+      <!-- NEW: Create Deck Button -->
+      <button id="createDeckBtn" class="secondary">➕ CREATE CUSTOM DECK</button>
+      
       <button id="permissionBtn" class="permission">📱 ENABLE TILT</button>
       <p id="permissionStatus" class="status"></p>
+    </div>
+
+    <!-- SCREEN 1.5: CREATE CUSTOM DECK -->
+    <div id="createDeck" class="screen">
+      <h2>Create Your Deck</h2>
+      
+      <label>Deck Name (e.g., Inside Jokes)</label>
+      <input type="text" id="customDeckName" placeholder="Enter deck name..." />
+
+      <label>Words (separated by commas)</label>
+      <textarea id="customDeckWords" placeholder="Word 1, Word 2, Word 3..."></textarea>
+
+      <button id="saveDeckBtn" class="primary">💾 SAVE DECK</button>
+      <button id="backToHomeBtn" class="secondary">⬅️ BACK</button>
     </div>
 
     <!-- SCREEN 2: COUNTDOWN -->
     <div id="countdown" class="screen">
       <h2>Get Ready...</h2>
       <div id="countdownNum" class="big-num">3</div>
-      <p>Hold phone on forehead.<br><strong>TILT DOWN = GUESSED ✅</strong><br><strong>TILT UP = PASS ❌</strong></p>
+      <p>Hold phone on forehead.<br><strong>TILT UP = GUESSED ✅</strong><br><strong>TILT DOWN = PASS ❌</strong></p>
     </div>
 
     <!-- SCREEN 3: GAME -->
@@ -51,13 +63,13 @@
         <span id="timer">60</span>
         <span id="scoreDisplay">Score: 0</span>
       </div>
-
+      
       <div id="wordCard" class="word-card">
         <p id="currentWord">Loading...</p>
       </div>
       
       <div class="tilt-hint">
-        ⬇️ Tilt DOWN = Guessed &nbsp; | &nbsp; ⬆️ Tilt UP = Pass
+        ⬆️ Tilt UP = Guessed &nbsp; | &nbsp; ⬇️ Tilt DOWN = Pass
       </div>
     </div>
 
@@ -76,6 +88,6 @@
 
   </div>
 
-  <script src="script.js?v=4"></script>
+  <script src="script.js?v=5"></script>
 </body>
 </html>
