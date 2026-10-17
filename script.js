@@ -78,12 +78,12 @@ function handleTilt(event) {
 
   // 🔥 THE RULES 🔥
   // ⬇️ TILT DOWN (Negative relative angle) = CORRECT
-  if (relativeBeta < -15) {
+  if (relativeBeta > 15) {
     state.lastTiltTime = now;
     triggerTilt("correct");
   }
   // ⬆️ TILT UP (Positive relative angle) = SKIP
-  else if (relativeBeta > 15) {
+  else if (relativeBeta < -15) {
     state.lastTiltTime = now;
     triggerTilt("skip");
   }
