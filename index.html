@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>🎭 Charades — Free Edition</title>
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=4" />
 </head>
 <body>
   <div class="app">
@@ -34,7 +34,6 @@
       </select>
 
       <button id="startBtn" class="primary">▶ START GAME</button>
-
       <button id="permissionBtn" class="permission">📱 ENABLE TILT</button>
       <p id="permissionStatus" class="status"></p>
     </div>
@@ -52,10 +51,13 @@
         <span id="timer">60</span>
         <span id="scoreDisplay">Score: 0</span>
       </div>
-    <div="debugText" style="font-size: 12px; color: #ff9800; font-family: monospace; margin-top: 5px">Beta:--</div>
+      
+      <div id="debugText" style="font-size: 14px; color: #ff9800; font-family: monospace; margin: 5px 0; font-weight: bold; background: #000; padding: 5px; border-radius: 5px;">Beta: Waiting...</div>
+
       <div id="wordCard" class="word-card">
         <p id="currentWord">Loading...</p>
       </div>
+      
       <div class="tilt-hint">
         ⬇️ Tilt DOWN = Guessed &nbsp; | &nbsp; ⬆️ Tilt UP = Pass
       </div>
@@ -76,6 +78,6 @@
 
   </div>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>

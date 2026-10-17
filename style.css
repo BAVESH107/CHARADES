@@ -27,7 +27,6 @@ body {
   flex-direction: column;
 }
 
-/* Screens */
 .screen {
   display: none;
   flex-direction: column;
@@ -42,7 +41,6 @@ body {
   display: flex;
 }
 
-/* Home */
 h1 {
   font-size: 2.5rem;
   background: linear-gradient(90deg, #00ffc8, #ff00c8);
@@ -98,7 +96,6 @@ button:active {
   box-shadow: 0 0 20px rgba(0, 255, 200, 0.4);
 }
 
-/* Countdown */
 .big-num {
   font-size: 8rem;
   font-weight: bold;
@@ -111,7 +108,6 @@ button:active {
   50% { transform: scale(1.15); }
 }
 
-/* Game */
 .hud {
   display: flex;
   justify-content: space-between;
@@ -120,13 +116,8 @@ button:active {
   font-weight: bold;
 }
 
-#timer {
-  color: #ff5555;
-}
-
-#scoreDisplay {
-  color: #00ffc8;
-}
+#timer { color: #ff5555; }
+#scoreDisplay { color: #00ffc8; }
 
 .word-card {
   flex: 1;
@@ -149,7 +140,6 @@ button:active {
   word-break: break-word;
 }
 
-/* Result */
 .score-display h1 {
   font-size: 6rem;
   margin: 10px 0;
@@ -175,7 +165,6 @@ button:active {
 #wordHistory li.correct { color: #00ffc8; }
 #wordHistory li.skip { color: #ff5555; }
 
-/* Permission button (iOS) */
 .permission {
   background: #ff9800;
   color: #000;
@@ -193,7 +182,6 @@ button:active {
   min-height: 20px;
 }
 
-/* Tilt hint */
 .tilt-hint {
   width: 100%;
   text-align: center;
@@ -205,13 +193,13 @@ button:active {
   margin-top: 8px;
 }
 
-/* Visual feedback on tilt */
-.word-card.flash-correct {
-  background: linear-gradient(135deg, #00c86a, #00ffc8) !important;
+/* 🔥 THE FINAL COLORS 🔥 */
+.word-card.flash-guessed {
+  background: linear-gradient(135deg, #00c86a, #00ffc8) !important; /* GREEN */
   transform: scale(1.02);
 }
 
-.word-card.flash-skip {
-  background: linear-gradient(135deg, #ff5555, #ff0000) !important;
+.word-card.flash-pass {
+  background: linear-gradient(135deg, #ff5555, #ff0000) !important; /* RED */
   transform: scale(0.98);
 }

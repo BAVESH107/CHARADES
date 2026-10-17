@@ -1,5 +1,5 @@
 // ================================
-// 🎭 CHARADES — TILT VERSION v3
+// 🎭 CHARADES — FINAL LOGIC
 // ================================
 
 const DECKS = {
@@ -13,7 +13,8 @@ const DECKS = {
 let state = {
   category: "movies", timeLimit: 60, timeLeft: 60, score: 0,
   currentWord: "", usedWords: [], history: [], timerInterval: null,
-  isPlaying: false, motionEnabled: false, lastTiltTime: 0
+  isPlaying: false, motionEnabled: false, lastTiltTime: 0,
+  baselineBeta: 0
 };
 
 const screens = { home: document.getElementById("home"), countdown: document.getElementById("countdown"), game: document.getElementById("game"), result: document.getElementById("result") };
@@ -45,9 +46,7 @@ els.permissionBtn.addEventListener("click", async () => {
       } else {
         els.permissionStatus.textContent = "❌ Permission denied";
       }
-    } catch (err) {
-      els.permissionStatus.textContent = "⚠️ Error: " + err.message;
-    }
+    } catch (err) { els.permissionStatus.textContent = "⚠️ Error: " + err.message; }
   } else {
     state.motionEnabled = true;
     els.permissionStatus.textContent = "✅ Tilt enabled (auto)!";
@@ -56,59 +55,62 @@ els.permissionBtn.addEventListener("click", async () => {
   }
 });
 
-// 🎯 TILT HANDLER WITH LIVE DEBUGGER
+// 🎯 TILT HANDLER
 function handleTilt(event) {
   if (event.beta === null) return;
   
-  // SHOW THE LIVE ANGLE ON SCREEN
+  // Update baseline if game hasn't started
+  if (!state.isPlaying) {
+    state.baselineBeta = event.beta;
+  }
+
+  const relativeBeta = event.beta - state.baselineBeta;
+
+  // Debugger
   if (els.debugText) {
-    els.debugText.textContent = `Beta: ${event.beta.toFixed(1)}°`;
+    els.debugText.textContent = `Raw: ${event.beta.toFixed(0)}° | Rel: ${relativeBeta.toFixed(0)}°`;
   }
 
   if (!state.isPlaying) return;
 
-  const beta = event.beta;
   const now = Date.now();
-
   if (now - state.lastTiltTime < 1200) return;
 
-  // Based on your feedback: TILT UP = CORRECT, TILT DOWN = SKIP
-  if (beta < -15) {
-    // DOWN
-    state.lastTiltTime = now;
-    triggerTilt("skip"); 
-  } else if (beta > 15) {
-    // UP
+  // 🔥 THE RULES 🔥
+  // ⬇️ TILT DOWN (Negative relative angle) = CORRECT
+  if (relativeBeta < -15) {
     state.lastTiltTime = now;
     triggerTilt("correct");
   }
+  // ⬆️ TILT UP (Positive relative angle) = SKIP
+  else if (relativeBeta > 15) {
+    state.lastTiltTime = now;
+    triggerTilt("skip");
+  }
 }
 
-// 🎯 TRIGGER TILT (FORCED COLORS)
+// 🎯 TRIGGER TILT
 function triggerTilt(result) {
-  // Force remove old classes first
   els.wordCard.classList.remove("flash-guessed", "flash-pass");
   
-  // Apply new class
   if (result === "correct") {
-    els.wordCard.classList.add("flash-guessed");
+    els.wordCard.classList.add("flash-guessed"); // Green
     playCorrectSound();
   } else {
-    els.wordCard.classList.add("flash-pass");
+    els.wordCard.classList.add("flash-pass"); // Red
     playSkipSound();
   }
   
-  setTimeout(() => {
-    els.wordCard.classList.remove("flash-guessed", "flash-pass");
-  }, 300);
-
+  setTimeout(() => { els.wordCard.classList.remove("flash-guessed", "flash-pass"); }, 300);
   if (navigator.vibrate) navigator.vibrate(result === "correct" ? 100 : [50, 50, 50]);
   handleAnswer(result);
 }
 
+// SOUNDS
 function playCorrectSound() { try { const a = new AudioContext(); const o = a.createOscillator(); const g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 880; g.gain.setValueAtTime(0.1, a.currentTime); g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.2); o.start(a.currentTime); o.stop(a.currentTime + 0.2); } catch(e){} }
 function playSkipSound() { try { const a = new AudioContext(); const o = a.createOscillator(); const g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 220; g.gain.setValueAtTime(0.1, a.currentTime); g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.2); o.start(a.currentTime); o.stop(a.currentTime + 0.2); } catch(e){} }
 
+// GAME LOGIC
 function getRandomWord() {
   const deck = DECKS[state.category];
   const available = deck.filter(w => !state.usedWords.includes(w));
@@ -135,6 +137,7 @@ function startGame() {
   els.scoreDisplay.textContent = "Score: 0";
   els.currentWord.textContent = getRandomWord();
   showScreen("game");
+  
   state.timerInterval = setInterval(() => {
     state.timeLeft--; els.timer.textContent = state.timeLeft;
     if (state.timeLeft <= 0) endGame();
