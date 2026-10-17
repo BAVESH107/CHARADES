@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>🎭 Charades — Free Edition</title>
+  <link rel="stylesheet" href="style.css?v=2" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- SCREEN 1: HOME -->
+    <div id="home" class="screen active">
+      <h1>🎭 CHARADES</h1>
+      <p class="tagline">Tilt to play. No buttons needed.</p>
+
+      <label>Category</label>
+      <select id="category">
+        <option value="movies">🎬 Movies</option>
+        <option value="animals">🐘 Animals</option>
+        <option value="actions">🏃 Actions</option>
+        <option value="bollywood">🎥 Bollywood</option>
+        <option value="vlsi">🧠 VLSI / Electronics</option>
+      </select>
+
+      <label>Time (seconds)</label>
+      <select id="timeLimit">
+        <option value="30">30s</option>
+        <option value="60" selected>60s</option>
+        <option value="90">90s</option>
+      </select>
+
+      <button id="startBtn" class="primary">▶ START GAME</button>
+
+      <button id="permissionBtn" class="permission">📱 ENABLE TILT</button>
+      <p id="permissionStatus" class="status"></p>
+    </div>
+
+    <!-- SCREEN 2: COUNTDOWN -->
+    <div id="countdown" class="screen">
+      <h2>Get Ready...</h2>
+      <div id="countdownNum" class="big-num">3</div>
+      <p>Hold phone on forehead.<br><strong>TILT DOWN = GUESSED ✅</strong><br><strong>TILT UP = PASS ❌</strong></p>
+    </div>
+
+    <!-- SCREEN 3: GAME -->
+    <div id="game" class="screen">
+      <div class="hud">
+        <span id="timer">60</span>
+        <span id="scoreDisplay">Score: 0</span>
+      </div>
+      <div id="wordCard" class="word-card">
+        <p id="currentWord">Loading...</p>
+      </div>
+      <div class="tilt-hint">
+        ⬇️ Tilt DOWN = Guessed &nbsp; | &nbsp; ⬆️ Tilt UP = Pass
+      </div>
+    </div>
+
+    <!-- SCREEN 4: RESULT -->
+    <div id="result" class="screen">
+      <h2>🎉 Time's Up!</h2>
+      <div class="score-display">
+        <p>You scored</p>
+        <h1 id="finalScore">0</h1>
+        <p>points</p>
+      </div>
+      <h3>Words Played:</h3>
+      <ul id="wordHistory"></ul>
+      <button id="restartBtn" class="primary">🔄 PLAY AGAIN</button>
+    </div>
+
+  </div>
+
+  <script src="script.js?v=2"></script>
+</body>
+</html>
