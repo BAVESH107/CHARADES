@@ -1,9 +1,10 @@
 // ================================
-// 🎭 CHARADES — UI POLISH UPDATE
+// 🎭 CHARADES — FINAL MASTER VERSION
 // ================================
 
 const SUPABASE_URL = "https://wcgxbgjnamybcbtfjiyo.supabase.co"; 
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjZ3hiZ2puYW15YmNidGZqaXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzMjU3NjgsImV4cCI6MjEwNzkwMTc2OH0.iMrEZLb3jjnbpwDfY6TqcpCLE7krgimKauvVOCkSzcE"; 
+
 const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let DECKS = {};
@@ -37,9 +38,12 @@ const els = {
   permissionBtn: document.getElementById("permissionBtn"),
   permissionActive: document.getElementById("permissionActive"),
   countdownNum: document.getElementById("countdownNum"),
-  timer: document.getElementById("timer"), scoreDisplay: document.getElementById("scoreDisplay"),
-  currentWord: document.getElementById("currentWord"), wordCard: document.getElementById("wordCard"),
-  finalScore: document.getElementById("finalScore"), wordHistory: document.getElementById("wordHistory"),
+  timer: document.getElementById("timer"), 
+  scoreDisplay: document.getElementById("scoreDisplay"),
+  currentWord: document.getElementById("currentWord"), 
+  wordCard: document.getElementById("wordCard"),
+  finalScore: document.getElementById("finalScore"), 
+  wordHistory: document.getElementById("wordHistory"),
   restartBtn: document.getElementById("restartBtn")
 };
 
@@ -53,11 +57,8 @@ function showScreen(name) {
 // ================================
 els.timeLimitGroup.addEventListener("click", (e) => {
   if (e.target.classList.contains("segment")) {
-    // Remove active from all
     document.querySelectorAll(".segment").forEach(btn => btn.classList.remove("active"));
-    // Add active to clicked
     e.target.classList.add("active");
-    // Update hidden input
     els.timeLimit.value = e.target.dataset.value;
   }
 });
@@ -76,12 +77,24 @@ els.customDeckWords.addEventListener("input", (e) => {
 });
 
 // ================================
-// ☁️ FETCH DECKS
+// ☁️ FETCH DECKS (With Timeout & Error Handling)
 // ================================
 async function loadCloudDecks() {
   try {
     els.category.innerHTML = "<option value=''>Loading...</option>";
-    const { data, error } = await dbClient.from('decks').select('*').order('created_at', { ascending: false });
+    
+    // Timeout to prevent infinite hanging on mobile networks
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second limit
+
+    const { data, error } = await dbClient
+      .from('decks')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .abortSignal(controller.signal);
+
+    clearTimeout(timeoutId);
+
     if (error) throw error;
 
     DECKS = {};
@@ -94,7 +107,7 @@ async function loadCloudDecks() {
     populateDropdown();
   } catch (error) {
     console.error("Error:", error);
-    els.category.innerHTML = "<option value=''>Error loading decks</option>";
+    els.category.innerHTML = "<option value=''>Error loading decks. Tap to retry.</option>";
   }
 }
 
@@ -143,7 +156,7 @@ els.saveDeckBtn.addEventListener("click", async () => {
       els.category.value = newKey;
     }
   } catch (error) {
-    alert("Failed to save.");
+    alert("Failed to save. Check connection.");
   } finally {
     els.saveDeckBtn.textContent = "Save Deck";
     els.saveDeckBtn.disabled = false;
@@ -182,7 +195,7 @@ els.syncBtn.addEventListener("click", async () => {
 });
 
 // ================================
-// 🎯 GAME LOGIC
+// 🎯 NAVIGATION & PERMISSIONS
 // ================================
 els.createDeckBtn.addEventListener("click", () => {
   els.customDeckName.value = "";
@@ -213,18 +226,35 @@ function enableTilt() {
   window.addEventListener("deviceorientation", handleTilt);
 }
 
+// ================================
+// 🎯 THE PERFECT TILT LOGIC (ZEROING)
+// ================================
 function handleTilt(event) {
-  if (event.beta === null || !state.isPlaying) return;
-  if (!state.isPlaying) { state.baselineBeta = event.beta; }
+  if (event.beta === null) return;
+
+  // 1. ZEROING LOGIC
+  // If we are NOT playing (i.e., during countdown), constantly update the baseline.
+  // This locks in whatever angle you are holding the phone as the center (0).
+  if (!state.isPlaying) {
+    state.baselineBeta = event.beta;
+    return; 
+  }
+
+  // Calculate tilt relative to the locked-in baseline
   const relativeBeta = event.beta - state.baselineBeta;
 
+  // Cooldown
   const now = Date.now();
   if (now - state.lastTiltTime < 1200) return;
 
-  if (relativeBeta < -15) {
+  // 2. THE CORRECT ANGLES
+  // Tilt DOWN (Negative) = CORRECT (Green + Score)
+  if (relativeBeta < -15) { 
     state.lastTiltTime = now;
     triggerTilt("correct");
-  } else if (relativeBeta > 15) {
+  }
+  // Tilt UP (Positive) = PASS (Red + Skip)
+  else if (relativeBeta > 15) {
     state.lastTiltTime = now;
     triggerTilt("skip");
   }
@@ -232,8 +262,13 @@ function handleTilt(event) {
 
 function triggerTilt(result) {
   els.wordCard.classList.remove("flash-guessed", "flash-pass");
-  if (result === "correct") { els.wordCard.classList.add("flash-guessed"); playCorrectSound(); } 
-  else { els.wordCard.classList.add("flash-pass"); playSkipSound(); }
+  if (result === "correct") { 
+    els.wordCard.classList.add("flash-guessed"); 
+    playCorrectSound(); 
+  } else { 
+    els.wordCard.classList.add("flash-pass"); 
+    playSkipSound(); 
+  }
   setTimeout(() => { els.wordCard.classList.remove("flash-guessed", "flash-pass"); }, 300);
   if (navigator.vibrate) navigator.vibrate(result === "correct" ? 100 : [50, 50, 50]);
   handleAnswer(result);
@@ -242,6 +277,9 @@ function triggerTilt(result) {
 function playCorrectSound() { try { const a = new AudioContext(); const o = a.createOscillator(); const g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 880; g.gain.setValueAtTime(0.1, a.currentTime); g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.2); o.start(a.currentTime); o.stop(a.currentTime + 0.2); } catch(e){} }
 function playSkipSound() { try { const a = new AudioContext(); const o = a.createOscillator(); const g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 220; g.gain.setValueAtTime(0.1, a.currentTime); g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.2); o.start(a.currentTime); o.stop(a.currentTime + 0.2); } catch(e){} }
 
+// ================================
+// 🎮 GAME ENGINE
+// ================================
 function getRandomWord() {
   const deck = DECKS[state.category];
   if (!deck || deck.length === 0) return "No words!";
@@ -253,52 +291,76 @@ function getRandomWord() {
 }
 
 function runCountdown() {
-  if (!state.category) { alert("Select a deck!"); return; }
+  if (!state.category || !DECKS[state.category]) { 
+    alert("Please select a valid deck!"); 
+    return; 
+  }
+  
   showScreen("countdown");
   let count = 3;
   els.countdownNum.textContent = count;
+  
   const interval = setInterval(() => {
     count--;
-    if (count > 0) { els.countdownNum.textContent = count; } 
-    else { clearInterval(interval); els.countdownNum.textContent = "GO"; setTimeout(startGame, 500); }
+    if (count > 0) { 
+      els.countdownNum.textContent = count; 
+    } else { 
+      clearInterval(interval); 
+      els.countdownNum.textContent = "GO"; 
+      setTimeout(startGame, 500); 
+    }
   }, 1000);
 }
 
 function startGame() {
-  // Zero out the tilt baseline right as the game starts
-  state.baselineBeta = 0; 
-  
+  // state.isPlaying = true stops the baseline zeroing and starts checking angles
   state.timeLeft = parseInt(els.timeLimit.value); 
-  state.score = 0; state.usedWords = []; state.history = []; state.isPlaying = true;
+  state.score = 0; 
+  state.usedWords = []; 
+  state.history = []; 
+  state.isPlaying = true; 
+  
   els.timer.textContent = state.timeLeft;
   els.scoreDisplay.textContent = "0 pts";
   els.currentWord.textContent = getRandomWord();
+  
   showScreen("game");
   
   state.timerInterval = setInterval(() => {
-    state.timeLeft--; els.timer.textContent = state.timeLeft;
+    state.timeLeft--; 
+    els.timer.textContent = state.timeLeft;
     if (state.timeLeft <= 0) endGame();
   }, 1000);
 }
 
 function handleAnswer(result) {
   if (!state.isPlaying) return;
+  
   state.history.push({ word: state.currentWord, result });
-  if (result === "correct") { state.score++; els.scoreDisplay.textContent = state.score + " pts"; }
+  
+  if (result === "correct") { 
+    state.score++; 
+    els.scoreDisplay.textContent = state.score + " pts"; 
+  }
+  
   state.currentWord = getRandomWord();
   els.currentWord.textContent = state.currentWord;
 }
 
 function endGame() {
-  state.isPlaying = false; clearInterval(state.timerInterval);
+  state.isPlaying = false; 
+  clearInterval(state.timerInterval);
+  
   els.finalScore.textContent = state.score;
   els.wordHistory.innerHTML = "";
+  
   state.history.forEach(item => {
     const li = document.createElement("li");
     li.className = item.result;
     li.textContent = item.word;
     els.wordHistory.appendChild(li);
   });
+  
   showScreen("result");
 }
 
@@ -309,7 +371,6 @@ els.startBtn.addEventListener("click", () => {
 
 els.restartBtn.addEventListener("click", () => showScreen("home"));
 
+// Initialize
 loadCloudDecks();
-
-// Show enable tilt button on load if not enabled
 els.permissionBtn.style.display = "flex";
