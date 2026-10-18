@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>🎭 Charades — Free Edition</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
@@ -13,7 +14,7 @@
     <!-- SCREEN 1: HOME -->
     <div id="home" class="screen active">
       <h1>🎭 CHARADES</h1>
-      <p class="tagline">Tilt to play. No buttons needed.</p>
+      <p class="tagline">Tilt to play.</p>
 
       <label>Category</label>
       <select id="category">
@@ -30,7 +31,8 @@
       <button id="startBtn" class="primary">▶ START GAME</button>
       
       <!-- NEW: Create Deck Button -->
-      <button id="createDeckBtn" class="secondary">➕ CREATE CUSTOM DECK</button>
+      <button id="createDeckBtn" class="secondary"> CREATE CUSTOM DECK</button>
+      <button id="syncBtn" class="secondary" style="border-color: #ff9800; color: #ff9800;">SYNC OLD DECKS</button>
       
       <button id="permissionBtn" class="permission">📱 ENABLE TILT</button>
       <p id="permissionStatus" class="status"></p>
