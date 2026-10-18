@@ -2,8 +2,8 @@
 // 🎭 CHARADES — UI POLISH UPDATE
 // ================================
 
-const SUPABASE_URL = "YOUR_SUPABASE_URL_HERE"; 
-const SUPABASE_KEY = "YOUR_SUPABASE_KEY_HERE"; 
+const SUPABASE_URL = "https://wcgxbgjnamybcbtfjiyo.supabase.co"; 
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjZ3hiZ2puYW15YmNidGZqaXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzMjU3NjgsImV4cCI6MjEwNzkwMTc2OH0.iMrEZLb3jjnbpwDfY6TqcpCLE7krgimKauvVOCkSzcE"; 
 const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let DECKS = {};
