@@ -251,12 +251,12 @@ function handleTilt(event) {
   // Tilt DOWN (Negative) = CORRECT (Green + Score)
   if (relativeBeta >15) { 
      state.lastTiltTime = now;
-    triggerTilt("skip");
+    triggerTilt("correct");
   }
   // Tilt UP (Positive) = PASS (Red + Skip)
   else if (relativeBeta < -15) {
      state.lastTiltTime = now;
-    triggerTilt("correct");
+    triggerTilt("skip");
   }
 }
 
