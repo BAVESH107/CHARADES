@@ -1,11 +1,12 @@
 // ================================
-// 🎭 CHARADES — PURE CLOUD EDITION (FIXED)
+// 🎭 CHARADES — V99 FRESH START
 // ================================
 
-// 🔑 SUPABASE SETUP
-const SUPABASE_URL = "https://wcgxbgjnamybcbtfjiyo.supabase.co"; // <--- PASTE URL HERE
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjZ3hiZ2puYW15YmNidGZqaXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzMjU3NjgsImV4cCI6MjEwNzkwMTc2OH0.iMrEZLb3jjnbpwDfY6TqcpCLE7krgimKauvVOCkSzcE"; // <--- PASTE KEY HERE
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL = "https://wcgxbgjnamybcbtfjiyo.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjZ3hiZ2puYW15YmNidGZqaXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzMjU3NjgsImV4cCI6MjEwNzkwMTc2OH0.iMrEZLb3jjnbpwDfY6TqcpCLE7krgimKauvVOCkSzcE";
+
+// CHANGED TO dbClient
+const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let DECKS = {};
 
@@ -51,8 +52,8 @@ function showScreen(name) {
 async function loadCloudDecks() {
   try {
     els.createDeckBtn.textContent = "☁️ Loading Cloud..."; 
-    
-    const { data, error } = await supabase.from('decks').select('*').order('created_at', { ascending: false });
+    // USING dbClient INSTEAD OF supabase
+    const { data, error } = await dbClient.from('decks').select('*').order('created_at', { ascending: false });
     
     if (error) throw error;
 
@@ -64,9 +65,7 @@ async function loadCloudDecks() {
         DECKS[deckKey] = deck.words;
       });
     }
-
     populateDropdown();
-    
   } catch (error) {
     console.error("Error loading cloud decks:", error);
     alert("Could not load cloud decks. Check your internet or Supabase keys.");
@@ -112,7 +111,7 @@ els.saveDeckBtn.addEventListener("click", async () => {
   els.saveDeckBtn.disabled = true;
 
   try {
-    const { data, error } = await supabase.from('decks').insert([{ name: name, words: wordsArray }]).select();
+    const { data, error } = await dbClient.from('decks').insert([{ name: name, words: wordsArray }]).select();
     if (error) throw error;
 
     await loadCloudDecks();
@@ -150,7 +149,7 @@ els.syncBtn.addEventListener("click", async () => {
     let deckName = key.replace("custom_", "").replace(/_/g, " ");
     deckName = deckName.replace(/\b\w/g, l => l.toUpperCase());
     try {
-      const { error } = await supabase.from('decks').insert([{ name: deckName, words: localDecks[key] }]);
+      const { error } = await dbClient.from('decks').insert([{ name: deckName, words: localDecks[key] }]);
       if (!error) successCount++;
     } catch (err) {}
   }
@@ -203,12 +202,10 @@ function handleTilt(event) {
   const now = Date.now();
   if (now - state.lastTiltTime < 1200) return;
 
-  // TILT DOWN = CORRECT
   if (relativeBeta < -15) {
     state.lastTiltTime = now;
     triggerTilt("correct");
   }
-  // TILT UP = SKIP
   else if (relativeBeta > 15) {
     state.lastTiltTime = now;
     triggerTilt("skip");
@@ -291,5 +288,4 @@ els.startBtn.addEventListener("click", () => {
 
 els.restartBtn.addEventListener("click", () => showScreen("home"));
 
-// Initialize
 loadCloudDecks();

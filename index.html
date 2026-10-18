@@ -5,34 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>🎭 Charades — Free Edition</title>
-  <!-- Supabase Library (ONLY loaded once here) -->
+  <!-- Supabase Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="style.css?v=10" />
+  <!-- NEW CSS FILE NAME -->
+  <link rel="stylesheet" href="styles.css?v=99" />
 </head>
 <body>
   <div class="app">
-
+    <!-- ... (Keep all your screen divs exactly the same) ... -->
+    
     <!-- SCREEN 1: HOME -->
     <div id="home" class="screen active">
       <h1>🎭 CHARADES</h1>
       <p class="tagline">Tilt to play. No buttons needed.</p>
-
       <label>Category</label>
-      <select id="category">
-        <!-- Decks will be injected here by JavaScript -->
-      </select>
-
+      <select id="category"></select>
       <label>Time (seconds)</label>
       <select id="timeLimit">
         <option value="30">30s</option>
         <option value="60" selected>60s</option>
         <option value="90">90s</option>
       </select>
-
       <button id="startBtn" class="primary">▶ START GAME</button>
       <button id="createDeckBtn" class="secondary">➕ CREATE CUSTOM DECK</button>
       <button id="syncBtn" class="secondary" style="border-color: #ff9800; color: #ff9800;">☁️ SYNC OLD DECKS</button>
-      
       <button id="permissionBtn" class="permission">📱 ENABLE TILT</button>
       <p id="permissionStatus" class="status"></p>
     </div>
@@ -40,13 +36,10 @@
     <!-- SCREEN 1.5: CREATE CUSTOM DECK -->
     <div id="createDeck" class="screen">
       <h2>Create Your Deck</h2>
-      
       <label>Deck Name</label>
       <input type="text" id="customDeckName" placeholder="e.g., Inside Jokes..." />
-
       <label>Words (separated by commas)</label>
       <textarea id="customDeckWords" placeholder="Word 1, Word 2, Word 3..."></textarea>
-
       <button id="saveDeckBtn" class="primary">💾 SAVE DECK</button>
       <button id="backToHomeBtn" class="secondary">⬅️ BACK</button>
     </div>
@@ -64,11 +57,9 @@
         <span id="timer">60</span>
         <span id="scoreDisplay">Score: 0</span>
       </div>
-      
       <div id="wordCard" class="word-card">
         <p id="currentWord">Loading...</p>
       </div>
-      
       <div class="tilt-hint">
         ⬇️ Tilt DOWN = Guessed &nbsp; | &nbsp; ⬆️ Tilt UP = Pass
       </div>
@@ -84,12 +75,11 @@
       </div>
       <h3>Words Played:</h3>
       <ul id="wordHistory"></ul>
-      <button id="restartBtn" class="primary"> PLAY AGAIN</button>
+      <button id="restartBtn" class="primary">🔄 PLAY AGAIN</button>
     </div>
-
   </div>
 
-  <!-- Script file (ONLY loaded once here) -->
-  <script src="script.js?v=10"></script>
+  <!-- NEW JS FILE NAME -->
+  <script src="app.js?v=99"></script>
 </body>
 </html>

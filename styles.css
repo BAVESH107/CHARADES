@@ -49,6 +49,12 @@ h1 {
   margin-bottom: 8px;
 }
 
+h2 {
+  font-size: 1.8rem;
+  color: #00ffc8;
+  margin-bottom: 10px;
+}
+
 .tagline {
   color: #888;
   margin-bottom: 24px;
@@ -62,7 +68,7 @@ label {
   margin-top: 8px;
 }
 
-select {
+select, input[type="text"], textarea {
   width: 100%;
   padding: 12px;
   background: #0f0f1a;
@@ -70,7 +76,16 @@ select {
   border: 2px solid #00ffc8;
   border-radius: 12px;
   font-size: 1rem;
+  font-family: inherit;
+}
+
+select {
   cursor: pointer;
+}
+
+textarea {
+  height: 120px;
+  resize: none;
 }
 
 button {
@@ -94,6 +109,22 @@ button:active {
   margin-top: 20px;
   font-size: 1.2rem;
   box-shadow: 0 0 20px rgba(0, 255, 200, 0.4);
+}
+
+.secondary {
+  background: #1a1a2e;
+  color: #00ffc8;
+  border: 2px solid #00ffc8;
+  padding: 14px;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 1rem;
+  box-shadow: none;
+}
+
+.secondary:active {
+  background: #00ffc8;
+  color: #000;
 }
 
 .big-num {
@@ -202,41 +233,4 @@ button:active {
 .word-card.flash-pass {
   background: linear-gradient(135deg, #ff5555, #ff0000) !important; /* RED */
   transform: scale(0.98);
-}
-/* New Decks & Inputs */
-.secondary {
-  background: #1a1a2e;
-  color: #00ffc8;
-  border: 2px solid #00ffc8;
-  padding: 14px;
-  width: 100%;
-  margin-top: 10px;
-  font-size: 1rem;
-  box-shadow: none;
-}
-
-.secondary:active {
-  background: #00ffc8;
-  color: #000;
-}
-
-input[type="text"], textarea {
-  width: 100%;
-  padding: 12px;
-  background: #0f0f1a;
-  color: #fff;
-  border: 2px solid #00ffc8;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-family: inherit;
-}
-
-textarea {
-  height: 120px;
-  resize: none;
-}
-
-#createDeck h2 {
-  color: #00ffc8;
-  margin-bottom: 10px;
 }
