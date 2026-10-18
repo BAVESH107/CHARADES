@@ -2,84 +2,131 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>🎭 Charades — Free Edition</title>
-  <!-- Supabase Library -->
+  <title>Charades</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- NEW CSS FILE NAME -->
-  <link rel="stylesheet" href="styles.css?v=99" />
+  
+  <link rel="stylesheet" href="styles.css?v=11" />
 </head>
 <body>
   <div class="app">
-    <!-- ... (Keep all your screen divs exactly the same) ... -->
-    
+
     <!-- SCREEN 1: HOME -->
     <div id="home" class="screen active">
-      <h1>🎭 CHARADES</h1>
-      <p class="tagline">Tilt to play. No buttons needed.</p>
-      <label>Category</label>
-      <select id="category"></select>
-      <label>Time (seconds)</label>
-      <select id="timeLimit">
-        <option value="30">30s</option>
-        <option value="60" selected>60s</option>
-        <option value="90">90s</option>
-      </select>
-      <button id="startBtn" class="primary">▶ START GAME</button>
-      <button id="createDeckBtn" class="secondary">➕ CREATE CUSTOM DECK</button>
-      <button id="syncBtn" class="secondary" style="border-color: #ff9800; color: #ff9800;">☁️ SYNC OLD DECKS</button>
-      <button id="permissionBtn" class="permission">📱 ENABLE TILT</button>
-      <p id="permissionStatus" class="status"></p>
+      <div class="logo-area">
+        <h1>CHARADES</h1>
+        <p class="tagline">Tilt. Guess. Pass. Repeat.</p>
+      </div>
+
+      <div class="form-group">
+        <label>DECK</label>
+        <div class="select-wrapper">
+          <select id="category">
+            <option value="">Loading decks...</option>
+          </select>
+          <i class="ph ph-caret-down"></i>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>ROUND LENGTH</label>
+        <div class="segmented-control" id="timeLimitGroup">
+          <button class="segment" data-value="30">30s</button>
+          <button class="segment active" data-value="60">60s</button>
+          <button class="segment" data-value="90">90s</button>
+        </div>
+        <input type="hidden" id="timeLimit" value="60" />
+      </div>
+
+      <button id="startBtn" class="primary-btn">
+        <i class="ph-fill ph-play"></i> Start Game
+      </button>
+
+      <div class="secondary-actions">
+        <button id="createDeckBtn" class="text-btn">
+          <i class="ph ph-plus"></i> Create deck
+        </button>
+        <button id="syncBtn" class="text-btn">
+          <i class="ph ph-arrows-clockwise"></i> Sync decks
+        </button>
+      </div>
+
+      <div class="status-area">
+        <button id="permissionBtn" class="status-pill" style="display:none;">
+          <i class="ph ph-device-mobile"></i> Enable tilt controls
+        </button>
+        <div id="permissionActive" class="status-active" style="display:none;">
+          <span class="dot"></span> Tilt controls active
+        </div>
+      </div>
     </div>
 
     <!-- SCREEN 1.5: CREATE CUSTOM DECK -->
     <div id="createDeck" class="screen">
-      <h2>Create Your Deck</h2>
-      <label>Deck Name</label>
-      <input type="text" id="customDeckName" placeholder="e.g., Inside Jokes..." />
-      <label>Words (separated by commas)</label>
-      <textarea id="customDeckWords" placeholder="Word 1, Word 2, Word 3..."></textarea>
-      <button id="saveDeckBtn" class="primary">💾 SAVE DECK</button>
-      <button id="backToHomeBtn" class="secondary">⬅️ BACK</button>
+      <div class="header-row">
+        <h2>Create a Deck</h2>
+        <button id="backToHomeBtn" class="icon-btn"><i class="ph ph-x"></i></button>
+      </div>
+      
+      <div class="form-group">
+        <label>DECK NAME</label>
+        <input type="text" id="customDeckName" placeholder="e.g., Inside Jokes" />
+      </div>
+
+      <div class="form-group">
+        <label>WORDS (COMMA SEPARATED)</label>
+        <textarea id="customDeckWords" placeholder="Word 1, Word 2, Word 3..."></textarea>
+        <p class="helper-text" id="wordCount">0 words</p>
+      </div>
+
+      <button id="saveDeckBtn" class="primary-btn">Save Deck</button>
     </div>
 
     <!-- SCREEN 2: COUNTDOWN -->
     <div id="countdown" class="screen">
-      <h2>Get Ready...</h2>
       <div id="countdownNum" class="big-num">3</div>
-      <p>Hold phone on forehead.<br><strong>TILT DOWN = GUESSED ✅</strong><br><strong>TILT UP = PASS ❌</strong></p>
+      <p class="instruction-text">Hold phone on forehead.<br><span style="color:var(--primary)">Tilt DOWN = Guessed</span><br><span style="color:var(--text-muted)">Tilt UP = Pass</span></p>
     </div>
 
     <!-- SCREEN 3: GAME -->
     <div id="game" class="screen">
       <div class="hud">
-        <span id="timer">60</span>
-        <span id="scoreDisplay">Score: 0</span>
+        <span id="timer" class="timer">60</span>
+        <span id="scoreDisplay" class="score">0 pts</span>
       </div>
+      
       <div id="wordCard" class="word-card">
         <p id="currentWord">Loading...</p>
-      </div>
-      <div class="tilt-hint">
-        ⬇️ Tilt DOWN = Guessed &nbsp; | &nbsp; ⬆️ Tilt UP = Pass
       </div>
     </div>
 
     <!-- SCREEN 4: RESULT -->
     <div id="result" class="screen">
-      <h2>🎉 Time's Up!</h2>
+      <h2>Time's Up!</h2>
       <div class="score-display">
-        <p>You scored</p>
         <h1 id="finalScore">0</h1>
-        <p>points</p>
+        <p>points scored</p>
       </div>
-      <h3>Words Played:</h3>
-      <ul id="wordHistory"></ul>
-      <button id="restartBtn" class="primary">🔄 PLAY AGAIN</button>
+      <div class="history-container">
+        <h3>Words Played</h3>
+        <ul id="wordHistory"></ul>
+      </div>
+      <button id="restartBtn" class="primary-btn">Play Again</button>
     </div>
+
   </div>
 
-  <!-- NEW JS FILE NAME -->
-  <script src="app.js?v=99"></script>
+  <script src="app.js?v=11"></script>
 </body>
 </html>
