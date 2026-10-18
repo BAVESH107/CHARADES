@@ -1,19 +1,14 @@
 // ================================
-// 🎭 CHARADES — PURE CLOUD EDITION
+// 🎭 CHARADES — PURE CLOUD EDITION (FIXED)
 // ================================
 
 // 🔑 SUPABASE SETUP
-// REPLACE THESE WITH YOUR ACTUAL URL AND KEY!
-const SUPABASE_URL = "https://wcgxbgjnamybcbtfjiyo.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjZ3hiZ2puYW15YmNidGZqaXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzMjU3NjgsImV4cCI6MjEwNzkwMTc2OH0.iMrEZLb3jjnbpwDfY6TqcpCLE7krgimKauvVOCkSzcE";
+const SUPABASE_URL = "https://wcgxbgjnamybcbtfjiyo.supabase.co"; // <--- PASTE URL HERE
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjZ3hiZ2puYW15YmNidGZqaXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzMjU3NjgsImV4cCI6MjEwNzkwMTc2OH0.iMrEZLb3jjnbpwDfY6TqcpCLE7krgimKauvVOCkSzcE"; // <--- PASTE KEY HERE
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 📚 NO DEFAULT DECKS. CLOUD ONLY.
 let DECKS = {};
 
-// ================================
-// 🎯 GAME STATE & DOM ELEMENTS
-// ================================
 let state = {
   category: "", timeLimit: 60, timeLeft: 60, score: 0,
   currentWord: "", usedWords: [], history: [], timerInterval: null,
@@ -61,10 +56,8 @@ async function loadCloudDecks() {
     
     if (error) throw error;
 
-    // Reset DECKS object
     DECKS = {};
 
-    // Add cloud decks to our DECKS object
     if (data && data.length > 0) {
       data.forEach(deck => {
         const deckKey = `cloud_${deck.id}_${deck.name.toLowerCase().replace(/\s+/g, "_")}`;
@@ -84,7 +77,6 @@ async function loadCloudDecks() {
 
 function populateDropdown() {
   els.category.innerHTML = ""; 
-  
   const keys = Object.keys(DECKS);
   
   if (keys.length === 0) {
@@ -98,11 +90,8 @@ function populateDropdown() {
   keys.forEach(key => {
     const option = document.createElement("option");
     option.value = key;
-    
-    // Clean up the key to just show the name (e.g., "cloud_1_hostel_life" -> "☁️ Hostel Life")
     let displayName = key.split('_').slice(2).join(' ');
     displayName = displayName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    
     option.textContent = "☁️ " + displayName;
     els.category.appendChild(option);
   });
@@ -115,40 +104,25 @@ els.saveDeckBtn.addEventListener("click", async () => {
   const name = els.customDeckName.value.trim();
   const wordsString = els.customDeckWords.value.trim();
 
-  if (!name || !wordsString) {
-    alert("Please enter both a name and some words!");
-    return;
-  }
-
+  if (!name || !wordsString) { alert("Please enter both a name and some words!"); return; }
   const wordsArray = wordsString.split(",").map(w => w.trim()).filter(w => w !== "");
-
-  if (wordsArray.length < 3) {
-    alert("Please enter at least 3 words!");
-    return;
-  }
+  if (wordsArray.length < 3) { alert("Please enter at least 3 words!"); return; }
 
   els.saveDeckBtn.textContent = "☁️ Saving to Cloud...";
   els.saveDeckBtn.disabled = true;
 
   try {
-    const { data, error } = await supabase
-      .from('decks')
-      .insert([{ name: name, words: wordsArray }])
-      .select();
-
+    const { data, error } = await supabase.from('decks').insert([{ name: name, words: wordsArray }]).select();
     if (error) throw error;
 
     await loadCloudDecks();
     showScreen("home");
     
-    // Auto select the newly created deck
     if (data && data.length > 0) {
       const newKey = `cloud_${data[0].id}_${data[0].name.toLowerCase().replace(/\s+/g, "_")}`;
       els.category.value = newKey;
     }
-    
-    alert("Deck Saved to Cloud! Everyone can play it now! 🎉");
-
+    alert("Deck Saved to Cloud! 🎉");
   } catch (error) {
     console.error("Error saving deck:", error);
     alert("Failed to save to cloud. Check console.");
@@ -159,20 +133,14 @@ els.saveDeckBtn.addEventListener("click", async () => {
 });
 
 // ================================
-// ☁️ SYNC OLD LOCAL DECKS (Just in case)
+// ☁️ SYNC OLD LOCAL DECKS
 // ================================
 els.syncBtn.addEventListener("click", async () => {
   const localDecks = JSON.parse(localStorage.getItem("charades_custom_decks")) || {};
   const keys = Object.keys(localDecks);
 
-  if (keys.length === 0) {
-    alert("No old local decks found to sync! You're all clean.");
-    return;
-  }
-
-  if (!confirm(`Found ${keys.length} local decks. Do you want to upload them to the cloud?`)) {
-    return;
-  }
+  if (keys.length === 0) { alert("No old local decks found to sync!"); return; }
+  if (!confirm(`Found ${keys.length} local decks. Upload them to the cloud?`)) return;
 
   els.syncBtn.textContent = "☁️ Syncing...";
   els.syncBtn.disabled = true;
@@ -181,26 +149,22 @@ els.syncBtn.addEventListener("click", async () => {
   for (const key of keys) {
     let deckName = key.replace("custom_", "").replace(/_/g, " ");
     deckName = deckName.replace(/\b\w/g, l => l.toUpperCase());
-    const wordsArray = localDecks[key];
-
     try {
-      const { error } = await supabase.from('decks').insert([{ name: deckName, words: wordsArray }]);
+      const { error } = await supabase.from('decks').insert([{ name: deckName, words: localDecks[key] }]);
       if (!error) successCount++;
-    } catch (err) { console.error("Failed to sync:", deckName); }
+    } catch (err) {}
   }
 
   localStorage.removeItem("charades_custom_decks");
   await loadCloudDecks();
-  
-  els.syncBtn.textContent = "☁️ SYNC OLD DECKS TO CLOUD";
+  els.syncBtn.textContent = "☁️ SYNC OLD DECKS";
   els.syncBtn.disabled = false;
-  alert(`Successfully synced ${successCount} decks to the cloud! 🎉`);
+  alert(`Synced ${successCount} decks to the cloud! 🎉`);
 });
 
 // ================================
 // 🎯 GAME LOGIC & TILT
 // ================================
-
 els.createDeckBtn.addEventListener("click", () => {
   els.customDeckName.value = "";
   els.customDeckWords.value = "";
@@ -239,11 +203,13 @@ function handleTilt(event) {
   const now = Date.now();
   if (now - state.lastTiltTime < 1200) return;
 
-  if (relativeBeta > 15) {
+  // TILT DOWN = CORRECT
+  if (relativeBeta < -15) {
     state.lastTiltTime = now;
     triggerTilt("correct");
   }
-  else if (relativeBeta < -15) {
+  // TILT UP = SKIP
+  else if (relativeBeta > 15) {
     state.lastTiltTime = now;
     triggerTilt("skip");
   }
@@ -251,11 +217,8 @@ function handleTilt(event) {
 
 function triggerTilt(result) {
   els.wordCard.classList.remove("flash-guessed", "flash-pass");
-  if (result === "correct") {
-    els.wordCard.classList.add("flash-guessed"); playCorrectSound();
-  } else {
-    els.wordCard.classList.add("flash-pass"); playSkipSound();
-  }
+  if (result === "correct") { els.wordCard.classList.add("flash-guessed"); playCorrectSound(); } 
+  else { els.wordCard.classList.add("flash-pass"); playSkipSound(); }
   setTimeout(() => { els.wordCard.classList.remove("flash-guessed", "flash-pass"); }, 300);
   if (navigator.vibrate) navigator.vibrate(result === "correct" ? 100 : [50, 50, 50]);
   handleAnswer(result);
@@ -276,7 +239,6 @@ function getRandomWord() {
 
 function runCountdown() {
   if (!state.category) { alert("Please select or create a deck first!"); return; }
-  
   showScreen("countdown");
   let count = 3;
   els.countdownNum.textContent = count;
@@ -329,5 +291,5 @@ els.startBtn.addEventListener("click", () => {
 
 els.restartBtn.addEventListener("click", () => showScreen("home"));
 
-// Initialize on load
+// Initialize
 loadCloudDecks();

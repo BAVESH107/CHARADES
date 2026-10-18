@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>🎭 Charades — Free Edition</title>
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <link rel="stylesheet" href="style.css?v=5" />
+  <!-- Supabase Library (ONLY loaded once here) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="style.css?v=10" />
 </head>
 <body>
   <div class="app">
@@ -14,7 +15,7 @@
     <!-- SCREEN 1: HOME -->
     <div id="home" class="screen active">
       <h1>🎭 CHARADES</h1>
-      <p class="tagline">Tilt to play.</p>
+      <p class="tagline">Tilt to play. No buttons needed.</p>
 
       <label>Category</label>
       <select id="category">
@@ -29,10 +30,8 @@
       </select>
 
       <button id="startBtn" class="primary">▶ START GAME</button>
-      
-      <!-- NEW: Create Deck Button -->
-      <button id="createDeckBtn" class="secondary"> CREATE CUSTOM DECK</button>
-      <button id="syncBtn" class="secondary" style="border-color: #ff9800; color: #ff9800;">SYNC OLD DECKS</button>
+      <button id="createDeckBtn" class="secondary">➕ CREATE CUSTOM DECK</button>
+      <button id="syncBtn" class="secondary" style="border-color: #ff9800; color: #ff9800;">☁️ SYNC OLD DECKS</button>
       
       <button id="permissionBtn" class="permission">📱 ENABLE TILT</button>
       <p id="permissionStatus" class="status"></p>
@@ -42,8 +41,8 @@
     <div id="createDeck" class="screen">
       <h2>Create Your Deck</h2>
       
-      <label>Deck Name (e.g., Inside Jokes)</label>
-      <input type="text" id="customDeckName" placeholder="Enter deck name..." />
+      <label>Deck Name</label>
+      <input type="text" id="customDeckName" placeholder="e.g., Inside Jokes..." />
 
       <label>Words (separated by commas)</label>
       <textarea id="customDeckWords" placeholder="Word 1, Word 2, Word 3..."></textarea>
@@ -56,7 +55,7 @@
     <div id="countdown" class="screen">
       <h2>Get Ready...</h2>
       <div id="countdownNum" class="big-num">3</div>
-      <p>Hold phone on forehead.<br><strong>TILT UP = GUESSED ✅</strong><br><strong>TILT DOWN = PASS ❌</strong></p>
+      <p>Hold phone on forehead.<br><strong>TILT DOWN = GUESSED ✅</strong><br><strong>TILT UP = PASS ❌</strong></p>
     </div>
 
     <!-- SCREEN 3: GAME -->
@@ -71,7 +70,7 @@
       </div>
       
       <div class="tilt-hint">
-        ⬆️ Tilt UP = Guessed &nbsp; | &nbsp; ⬇️ Tilt DOWN = Pass
+        ⬇️ Tilt DOWN = Guessed &nbsp; | &nbsp; ⬆️ Tilt UP = Pass
       </div>
     </div>
 
@@ -85,11 +84,12 @@
       </div>
       <h3>Words Played:</h3>
       <ul id="wordHistory"></ul>
-      <button id="restartBtn" class="primary">🔄 PLAY AGAIN</button>
+      <button id="restartBtn" class="primary"> PLAY AGAIN</button>
     </div>
 
   </div>
 
-  <script src="script.js?v=5"></script>
+  <!-- Script file (ONLY loaded once here) -->
+  <script src="script.js?v=10"></script>
 </body>
 </html>
