@@ -249,7 +249,7 @@ function handleTilt(event) {
 
   // 2. THE CORRECT ANGLES
   // Tilt DOWN (Negative) = CORRECT (Green + Score)
-  if (relativeBeta < -15) { 
+  if (relativeBeta > -15) { 
     state.lastTiltTime = now;
     triggerTilt("correct");
   }
