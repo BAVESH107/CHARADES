@@ -4,15 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>Charades</title>
+  <title>🎭 Charades</title>
   
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
+  <!-- Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <link rel="stylesheet" href="styles.css?v=17" />
+  <link rel="stylesheet" href="styles.css?v=18" />
 </head>
 <body>
   <div class="app">
@@ -27,7 +32,7 @@
         <label>Pick a deck</label>
       </div>
 
-      <div id="deckGrid" class="deck-list">
+      <div id="deckGrid" class="deck-grid">
         <div class="empty-state">Loading decks...</div>
       </div>
 
@@ -56,7 +61,6 @@
     <div id="createDeck" class="screen">
       <header class="top-header">
         <button id="backToHomeBtn" class="text-btn"><i class="ph ph-arrow-left"></i> Back</button>
-        <h1 style="font-size: 1.1rem; letter-spacing: 1px;">NEW DECK</h1>
       </header>
 
       <div class="form-group" style="margin-top: 16px;">
@@ -115,7 +119,7 @@
     <!-- Global Status (Tilt) -->
     <div class="global-status">
       <button id="permissionBtn" class="status-pill" style="display:none;">
-        Enable tilt controls
+        <i class="ph ph-device-mobile"></i> Enable tilt controls
       </button>
       <div id="permissionActive" class="status-active" style="display:none;">
         <span class="dot"></span> Tilt controls active
@@ -124,6 +128,6 @@
 
   </div>
 
-  <script src="app.js?v=17"></script>
+  <script src="app.js?v=18"></script>
 </body>
 </html>
