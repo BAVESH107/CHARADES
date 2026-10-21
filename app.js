@@ -239,8 +239,8 @@ function handleTilt(event) {
   const now = Date.now();
   if (now - state.lastTiltTime < 1200) return;
 
-  if (relativeBeta < -15) { state.lastTiltTime = now; triggerTilt("correct"); }
-  else if (relativeBeta > 15) { state.lastTiltTime = now; triggerTilt("skip"); }
+  if (relativeBeta < -35) { state.lastTiltTime = now; triggerTilt("correct"); }
+  else if (relativeBeta > 35) { state.lastTiltTime = now; triggerTilt("skip"); }
 }
 
 function triggerTilt(result) {
