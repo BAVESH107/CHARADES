@@ -1,5 +1,5 @@
 // ================================
-// 🎭 CHARADES — WARM UI FINAL
+// 🎭 CHARADES — SWISS DESIGN UPDATE
 // ================================
 
 const SUPABASE_URL = "https://wcgxbgjnamybcbtfjiyo.supabase.co"; 
@@ -8,8 +8,8 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let DECKS = {};
-let DECK_COLORS = ['purple', 'mint', 'peach', 'sky', 'yellow'];
-let DECK_ICONS = ['ph-film-strip', 'ph-globe', 'ph-hamburger', 'ph-game-controller', 'ph-music-notes', 'ph-airplane'];
+// Muted colors based on your feedback
+let DECK_COLORS = ['blue', 'green', 'peach', 'purple', 'yellow'];
 
 let state = {
   category: "", timeLimit: 300, timeLeft: 300, score: 0,
@@ -32,6 +32,7 @@ const els = {
   timeLimit: document.getElementById("timeLimit"),
   timeLimitGroup: document.getElementById("timeLimitGroup"),
   startBtn: document.getElementById("startBtn"), 
+  createDeckBtn: document.getElementById("createDeckBtn"),
   saveDeckBtn: document.getElementById("saveDeckBtn"),
   backToHomeBtn: document.getElementById("backToHomeBtn"),
   customDeckName: document.getElementById("customDeckName"),
@@ -120,7 +121,7 @@ async function loadCloudDecks() {
     renderDeckGrid();
   } catch (error) {
     console.error("Error:", error);
-    els.deckGrid.innerHTML = "<div class='empty-state'>Error loading decks. Check connection.</div>";
+    els.deckGrid.innerHTML = "<div class='empty-state'>Error loading decks.</div>";
   }
 }
 
@@ -129,7 +130,7 @@ function renderDeckGrid() {
   const keys = Object.keys(DECKS);
   
   if (keys.length === 0) {
-    els.deckGrid.innerHTML = "<div class='empty-state'>No decks. Create one!</div>";
+    els.deckGrid.innerHTML = "<div class='empty-state'>No decks. Create one below!</div>";
   }
 
   keys.forEach((key, index) => {
@@ -137,47 +138,27 @@ function renderDeckGrid() {
     displayName = displayName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     
     const colorClass = DECK_COLORS[index % DECK_COLORS.length];
-    const iconClass = DECK_ICONS[index % DECK_ICONS.length];
     
-    const card = document.createElement("div");
-    card.className = `deck-card ${colorClass}`;
-    card.dataset.key = key;
+    const tile = document.createElement("div");
+    tile.className = `deck-tile ${colorClass}`;
+    tile.dataset.key = key;
     
-    if (state.category === key) card.classList.add("active");
+    if (state.category === key) tile.classList.add("active");
 
-    card.innerHTML = `
-      <i class="ph ${iconClass} icon"></i>
-      <div>
-        <div class="name">${displayName}</div>
-        <div class="count">${DECKS[key].length} cards</div>
-      </div>
+    // Simplified, no icons
+    tile.innerHTML = `
+      <span class="name">${displayName}</span>
+      <span class="count">${DECKS[key].length} cards</span>
     `;
 
-    card.addEventListener("click", () => {
-      document.querySelectorAll('.deck-card').forEach(c => c.classList.remove("active"));
-      card.classList.add("active");
+    tile.addEventListener("click", () => {
+      document.querySelectorAll('.deck-tile').forEach(c => c.classList.remove("active"));
+      tile.classList.add("active");
       state.category = key;
     });
 
-    els.deckGrid.appendChild(card);
+    els.deckGrid.appendChild(tile);
   });
-
-  const customCard = document.createElement("div");
-  customCard.className = `deck-card custom`;
-  customCard.innerHTML = `
-    <i class="ph ph-plus icon"></i>
-    <div>
-      <div class="name">Custom Deck</div>
-      <div class="count">Create new</div>
-    </div>
-  `;
-  customCard.addEventListener("click", () => {
-    els.customDeckName.value = "";
-    currentTags = [];
-    renderTags();
-    showScreen("createDeck");
-  });
-  els.deckGrid.appendChild(customCard);
 }
 
 // ☁️ SAVE DECK
@@ -202,7 +183,7 @@ els.saveDeckBtn.addEventListener("click", async () => {
       renderDeckGrid(); 
     }
   } catch (error) {
-    alert("Failed to save. Check connection.");
+    alert("Failed to save.");
   } finally {
     els.saveDeckBtn.textContent = "Save deck";
     els.saveDeckBtn.disabled = false;
@@ -210,6 +191,14 @@ els.saveDeckBtn.addEventListener("click", async () => {
 });
 
 // 🎯 NAVIGATION & PERMISSIONS
+// The new Create Deck button on the home screen
+els.createDeckBtn.addEventListener("click", () => {
+  els.customDeckName.value = "";
+  currentTags = [];
+  renderTags();
+  showScreen("createDeck");
+});
+
 els.backToHomeBtn.addEventListener("click", () => showScreen("home"));
 
 els.permissionBtn.addEventListener("click", async () => {
@@ -230,7 +219,7 @@ function enableTilt() {
   window.addEventListener("deviceorientation", handleTilt);
 }
 
-// 🎯 THE PERFECT TILT LOGIC
+// 🎯 TILT LOGIC (Now with 35 degree threshold!)
 function handleTilt(event) {
   if (event.beta === null) return;
   if (!state.isPlaying) { state.baselineBeta = event.beta; return; }
@@ -319,6 +308,5 @@ function endGame() {
 els.startBtn.addEventListener("click", () => runCountdown());
 els.restartBtn.addEventListener("click", () => showScreen("home"));
 
-// Initialize
 loadCloudDecks();
 els.permissionBtn.style.display = "flex";

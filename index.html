@@ -9,15 +9,12 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  
-  <!-- Icons -->
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <link rel="stylesheet" href="styles.css?v=15" />
+  <link rel="stylesheet" href="styles.css?v=16" />
 </head>
 <body>
   <div class="app">
@@ -26,7 +23,6 @@
     <div id="home" class="screen active">
       <header class="top-header">
         <h1>CHARADES</h1>
-        <button class="icon-btn" id="settingsBtn"><i class="ph ph-gear"></i></button>
       </header>
 
       <div class="hero">
@@ -38,27 +34,29 @@
         <label>Choose a deck</label>
       </div>
 
-      <!-- Deck Grid -->
-      <div id="deckGrid" class="deck-grid">
-        <!-- Decks will be injected here by JS -->
+      <!-- Deck List (Horizontal Tiles) -->
+      <div id="deckGrid" class="deck-list">
         <div class="empty-state">Loading decks...</div>
       </div>
 
-      <div class="section-title" style="margin-top: 10px;">
+      <div class="section-title" style="margin-top: 24px;">
         <label>Round length</label>
       </div>
 
       <!-- Segmented Control -->
       <div class="segmented-control" id="timeLimitGroup">
-        <button class="segment" data-value="120">2 min</button>
-        <button class="segment active" data-value="300">5 min</button>
-        <button class="segment" data-value="360">6 min</button>
+        <button class="segment" data-value="120">2 MIN</button>
+        <button class="segment active" data-value="300">5 MIN</button>
+        <button class="segment" data-value="360">6 MIN</button>
       </div>
       <input type="hidden" id="timeLimit" value="300" />
 
       <div class="action-area">
         <button id="startBtn" class="primary-btn">
-          START GAME <i class="ph ph-arrow-right"></i>
+          START GAME
+        </button>
+        <button id="createDeckBtn" class="text-btn" style="margin-top: 16px;">
+          + Create your own deck
         </button>
       </div>
     </div>
@@ -69,7 +67,7 @@
         <button id="backToHomeBtn" class="text-btn"><i class="ph ph-arrow-left"></i> Back</button>
       </header>
 
-      <div class="hero" style="margin-bottom: 20px;">
+      <div class="hero" style="margin-bottom: 24px;">
         <h2>Create a deck</h2>
         <p>Make it yours.</p>
       </div>
@@ -88,19 +86,19 @@
         <p class="helper-text" id="wordCount">0 cards added</p>
       </div>
 
-      <button id="saveDeckBtn" class="primary-btn" style="margin-top: 20px;">Save deck</button>
+      <button id="saveDeckBtn" class="primary-btn" style="margin-top: 24px;">Save deck</button>
     </div>
 
     <!-- SCREEN 3: COUNTDOWN -->
     <div id="countdown" class="screen">
       <div id="countdownNum" class="big-num">3</div>
-      <p class="instruction-text">Hold phone on forehead.<br><br><strong style="color:var(--coral)">Tilt UP = Pass</strong><br><strong style="color:var(--mint)">Tilt DOWN = Guess</strong></p>
+      <p class="instruction-text">Hold phone on forehead.<br><br><strong style="color:var(--coral)">Tilt UP = Pass</strong><br><strong style="color:var(--green)">Tilt DOWN = Guess</strong></p>
     </div>
 
     <!-- SCREEN 4: GAME -->
     <div id="game" class="screen">
       <div class="hud">
-        <span id="timer" class="timer">60</span>
+        <span id="timer" class="timer">300</span>
         <span id="scoreDisplay" class="score">0 pts</span>
       </div>
       
@@ -131,7 +129,7 @@
     <!-- Global Status (Tilt) -->
     <div class="global-status">
       <button id="permissionBtn" class="status-pill" style="display:none;">
-        <i class="ph ph-device-mobile"></i> Enable tilt controls
+        Enable tilt controls
       </button>
       <div id="permissionActive" class="status-active" style="display:none;">
         <span class="dot"></span> Tilt controls active
@@ -140,6 +138,6 @@
 
   </div>
 
-  <script src="app.js?v=15"></script>
+  <script src="app.js?v=16"></script>
 </body>
 </html>
