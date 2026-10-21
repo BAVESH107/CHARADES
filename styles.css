@@ -4,18 +4,19 @@
   --text-main: #242424;
   --text-muted: #77736D;
   
-  --purple: #7067A8;
-  --blue: #A9C2D0;
-  --green: #B9C9AE;
-  --peach: #E6C1A6;
-  --yellow: #E2C875;
-  --grey: #E8E5DF;
+  /* Slightly more muted, authored colors */
+  --purple: #7B73A8;
+  --blue: #B0C4D1;
+  --green: #BCC8B3;
+  --peach: #E3C4AF;
+  --yellow: #DEC98C;
+  --grey: #EBE9E4;
   
   --coral: #E57A7A;
   --mint: #9CC5A1;
 
-  --border: #E0DDD5;
-  --radius: 10px;
+  --border: #E2DFD7;
+  --radius: 10px; /* Tighter radius */
 }
 
 * {
@@ -48,7 +49,7 @@ body {
   display: none;
   flex-direction: column;
   flex: 1;
-  text-align: left; /* Left aligned by default */
+  text-align: left;
 }
 
 .screen.active {
@@ -58,24 +59,25 @@ body {
 /* Typography */
 h1 {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: 2px;
+  font-size: 1.4rem;
+  font-weight: 800; /* Heavier logo */
+  letter-spacing: 3px; /* More character */
   color: var(--text-main);
+  text-align: left; /* Left aligned now */
 }
 
 h2 {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.8rem;
+  font-size: 1.6rem; /* Slightly smaller, less aggressive */
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   color: var(--text-main);
 }
 
 label {
   display: block;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500; /* Less bold */
   color: var(--text-main);
   margin-bottom: 12px;
 }
@@ -83,9 +85,9 @@ label {
 /* Headers */
 .top-header {
   display: flex;
-  justify-content: center; /* Only logo is centered */
+  justify-content: space-between;
   align-items: center;
-  padding-bottom: 40px;
+  padding-bottom: 32px;
   position: relative;
 }
 
@@ -117,7 +119,7 @@ label {
   margin-bottom: 12px;
 }
 
-/* Deck List (Horizontal Tiles) */
+/* Deck List */
 .deck-list {
   display: flex;
   flex-direction: column;
@@ -130,16 +132,16 @@ label {
   border-radius: var(--radius);
   padding: 16px 20px;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 1px solid var(--border); /* Thin border instead of shadow */
   transition: transform 0.1s, border-color 0.2s;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  box-shadow: none; /* NO SHADOW */
 }
 
 .deck-tile:active {
-  transform: scale(0.98);
+  transform: scale(0.99);
 }
 
 .deck-tile.active {
@@ -157,12 +159,12 @@ label {
 }
 
 /* Muted Deck Colors */
-.deck-tile.blue { background: var(--blue); color: #2c3e50; }
-.deck-tile.green { background: var(--green); color: #2b3b26; }
-.deck-tile.peach { background: var(--peach); color: #4a3020; }
-.deck-tile.purple { background: var(--purple); color: #fff; }
-.deck-tile.yellow { background: var(--yellow); color: #4a3f12; }
-.deck-tile.grey { background: var(--grey); color: var(--text-main); }
+.deck-tile.blue { background: var(--blue); border-color: var(--blue); color: #2c3e50; }
+.deck-tile.green { background: var(--green); border-color: var(--green); color: #2b3b26; }
+.deck-tile.peach { background: var(--peach); border-color: var(--peach); color: #4a3020; }
+.deck-tile.purple { background: var(--purple); border-color: var(--purple); color: #fff; }
+.deck-tile.yellow { background: var(--yellow); border-color: var(--yellow); color: #4a3f12; }
+.deck-tile.grey { background: var(--grey); border-color: var(--grey); color: var(--text-main); }
 
 /* Segmented Control */
 .segmented-control {
@@ -180,7 +182,7 @@ label {
   border: none;
   color: var(--text-muted);
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
@@ -189,7 +191,8 @@ label {
 .segment.active {
   background: var(--card);
   color: var(--text-main);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  font-weight: 600;
+  box-shadow: none; /* NO SHADOW */
 }
 
 /* Buttons */
@@ -211,14 +214,13 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
   transition: transform 0.1s, background 0.2s;
-  box-shadow: 0 4px 0 #4B45B2;
+  box-shadow: none; /* Removed the 3D shadow, keeping it flat */
 }
 
 .primary-btn:active {
-  transform: translateY(4px);
-  box-shadow: 0 0 0 #4B45B2;
+  transform: scale(0.98);
+  background: #6B6395;
 }
 
 .action-area {
@@ -274,7 +276,7 @@ input[type="text"]:focus {
 #tagInput:focus { outline: none; }
 
 .chip {
-  background: #EFECE5;
+  background: var(--grey);
   color: var(--text-main);
   padding: 6px 12px;
   border-radius: 6px;
@@ -332,7 +334,7 @@ input[type="text"]:focus {
   border-radius: 50%;
 }
 
-/* Game Screen */
+/* Game Screen (Where the personality goes) */
 .hud {
   display: flex;
   justify-content: space-between;
@@ -361,7 +363,7 @@ input[type="text"]:focus {
   border-radius: 16px;
   padding: 40px;
   text-align: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.04);
   transition: background 0.2s ease, transform 0.2s ease;
   border: 2px solid var(--border);
 }
@@ -437,7 +439,8 @@ input[type="text"]:focus {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  border: 1px solid var(--border);
+  box-shadow: none;
 }
 
 .history-container h3 {
@@ -456,7 +459,7 @@ input[type="text"]:focus {
 
 #wordHistory li {
   padding: 10px 0;
-  border-bottom: 1px solid #EFECE5;
+  border-bottom: 1px solid var(--grey);
   font-size: 1rem;
   display: flex;
   align-items: center;
