@@ -9,7 +9,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
   <!-- Icons -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -17,89 +17,87 @@
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <link rel="stylesheet" href="styles.css?v=11" />
+  <link rel="stylesheet" href="styles.css?v=15" />
 </head>
 <body>
   <div class="app">
 
     <!-- SCREEN 1: HOME -->
     <div id="home" class="screen active">
-      <div class="logo-area">
+      <header class="top-header">
         <h1>CHARADES</h1>
-        <p class="tagline">Tilt. Guess. Pass. Repeat.</p>
+        <button class="icon-btn" id="settingsBtn"><i class="ph ph-gear"></i></button>
+      </header>
+
+      <div class="hero">
+        <h2>Ready to play?</h2>
+        <p>Pick a deck and start guessing.</p>
       </div>
 
-      <div class="form-group">
-        <label>DECK</label>
-        <div class="select-wrapper">
-          <select id="category">
-            <option value="">Loading decks...</option>
-          </select>
-          <i class="ph ph-caret-down"></i>
-        </div>
+      <div class="section-title">
+        <label>Choose a deck</label>
       </div>
 
-      <div class="form-group">
-        <label>ROUND LENGTH</label>
-        <div class="segmented-control" id="timeLimitGroup">
-          <button class="segment" data-value="30">30s</button>
-          <button class="segment active" data-value="60">60s</button>
-          <button class="segment" data-value="90">90s</button>
-        </div>
-        <input type="hidden" id="timeLimit" value="60" />
+      <!-- Deck Grid -->
+      <div id="deckGrid" class="deck-grid">
+        <!-- Decks will be injected here by JS -->
+        <div class="empty-state">Loading decks...</div>
       </div>
 
-      <button id="startBtn" class="primary-btn">
-        <i class="ph-fill ph-play"></i> Start Game
-      </button>
+      <div class="section-title" style="margin-top: 10px;">
+        <label>Round length</label>
+      </div>
 
-      <div class="secondary-actions">
-        <button id="createDeckBtn" class="text-btn">
-          <i class="ph ph-plus"></i> Create deck
+      <!-- Segmented Control -->
+      <div class="segmented-control" id="timeLimitGroup">
+        <button class="segment" data-value="120">2 min</button>
+        <button class="segment active" data-value="300">5 min</button>
+        <button class="segment" data-value="360">6 min</button>
+      </div>
+      <input type="hidden" id="timeLimit" value="300" />
+
+      <div class="action-area">
+        <button id="startBtn" class="primary-btn">
+          START GAME <i class="ph ph-arrow-right"></i>
         </button>
-        <button id="syncBtn" class="text-btn">
-          <i class="ph ph-arrows-clockwise"></i> Sync decks
-        </button>
-      </div>
-
-      <div class="status-area">
-        <button id="permissionBtn" class="status-pill" style="display:none;">
-          <i class="ph ph-device-mobile"></i> Enable tilt controls
-        </button>
-        <div id="permissionActive" class="status-active" style="display:none;">
-          <span class="dot"></span> Tilt controls active
-        </div>
       </div>
     </div>
 
-    <!-- SCREEN 1.5: CREATE CUSTOM DECK -->
+    <!-- SCREEN 2: CREATE CUSTOM DECK -->
     <div id="createDeck" class="screen">
-      <div class="header-row">
-        <h2>Create a Deck</h2>
-        <button id="backToHomeBtn" class="icon-btn"><i class="ph ph-x"></i></button>
+      <header class="top-header">
+        <button id="backToHomeBtn" class="text-btn"><i class="ph ph-arrow-left"></i> Back</button>
+      </header>
+
+      <div class="hero" style="margin-bottom: 20px;">
+        <h2>Create a deck</h2>
+        <p>Make it yours.</p>
       </div>
       
       <div class="form-group">
-        <label>DECK NAME</label>
-        <input type="text" id="customDeckName" placeholder="e.g., Inside Jokes" />
+        <label>Deck name</label>
+        <input type="text" id="customDeckName" placeholder="e.g., College Chaos" />
       </div>
 
       <div class="form-group">
-        <label>WORDS (COMMA SEPARATED)</label>
-        <textarea id="customDeckWords" placeholder="Word 1, Word 2, Word 3..."></textarea>
-        <p class="helper-text" id="wordCount">0 words</p>
+        <label>Add cards</label>
+        <div class="tag-input-container" id="tagContainer">
+          <!-- Chips will be injected here -->
+          <input type="text" id="tagInput" placeholder="Type a card and press Enter..." />
+        </div>
+        <p class="helper-text" id="wordCount">0 cards added</p>
       </div>
 
-      <button id="saveDeckBtn" class="primary-btn">Save Deck</button>
+      <button id="saveDeckBtn" class="primary-btn" style="margin-top: 20px;">Save deck</button>
     </div>
 
-    <!-- SCREEN 2: COUNTDOWN -->
+    <!-- SCREEN 3: COUNTDOWN -->
     <div id="countdown" class="screen">
       <div id="countdownNum" class="big-num">3</div>
-      <p class="instruction-text">Hold phone on forehead.<br><span style="color:var(--primary)">Tilt DOWN = Pass</span><br><span style="color:var(--text-muted)">Tilt UP = Guessed</span></p>
+      <p class="instruction-text">Hold phone on forehead.<br><br><strong style="color:var(--coral)">Tilt UP = Pass</strong><br><strong style="color:var(--mint)">Tilt DOWN = Guess</strong></p>
     </div>
 
-    <!-- SCREEN 3: GAME -->
+    <!-- SCREEN 4: GAME -->
     <div id="game" class="screen">
       <div class="hud">
         <span id="timer" class="timer">60</span>
@@ -111,22 +109,37 @@
       </div>
     </div>
 
-    <!-- SCREEN 4: RESULT -->
+    <!-- SCREEN 5: RESULT -->
     <div id="result" class="screen">
-      <h2>Time's Up!</h2>
+      <div class="hero" style="margin-top: 20px;">
+        <h2>Time's Up!</h2>
+      </div>
+      
       <div class="score-display">
         <h1 id="finalScore">0</h1>
         <p>points scored</p>
       </div>
+      
       <div class="history-container">
-        <h3>Words Played</h3>
+        <h3>Cards Played</h3>
         <ul id="wordHistory"></ul>
       </div>
+      
       <button id="restartBtn" class="primary-btn">Play Again</button>
+    </div>
+
+    <!-- Global Status (Tilt) -->
+    <div class="global-status">
+      <button id="permissionBtn" class="status-pill" style="display:none;">
+        <i class="ph ph-device-mobile"></i> Enable tilt controls
+      </button>
+      <div id="permissionActive" class="status-active" style="display:none;">
+        <span class="dot"></span> Tilt controls active
+      </div>
     </div>
 
   </div>
 
-  <script src="app.js?v=11"></script>
+  <script src="app.js?v=15"></script>
 </body>
 </html>
