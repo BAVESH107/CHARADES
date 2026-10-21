@@ -9,7 +9,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
   <!-- Icons -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -17,7 +17,8 @@
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <link rel="stylesheet" href="styles.css?v=18" />
+  <!-- CSS LINK (Make sure this matches your filename exactly) -->
+  <link rel="stylesheet" href="styles.css?v=19" />
 </head>
 <body>
   <div class="app">
@@ -32,6 +33,7 @@
         <label>Pick a deck</label>
       </div>
 
+      <!-- Deck Grid -->
       <div id="deckGrid" class="deck-grid">
         <div class="empty-state">Loading decks...</div>
       </div>
@@ -40,6 +42,7 @@
         <label>Round length</label>
       </div>
 
+      <!-- Segmented Control -->
       <div class="segmented-control" id="timeLimitGroup">
         <button class="segment" data-value="120">2 min</button>
         <button class="segment active" data-value="300">5 min</button>
@@ -128,6 +131,6 @@
 
   </div>
 
-  <script src="app.js?v=18"></script>
+  <script src="app.js?v=19"></script>
 </body>
 </html>
