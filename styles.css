@@ -55,7 +55,6 @@ body {
   display: flex;
 }
 
-/* Typography */
 h1 {
   font-family: 'Outfit', sans-serif;
   font-size: 2rem;
@@ -86,7 +85,6 @@ label {
   letter-spacing: 1px;
 }
 
-/* Headers */
 .top-header {
   display: flex;
   justify-content: space-between;
@@ -188,7 +186,6 @@ label {
   color: var(--primary);
 }
 
-/* Buttons */
 button {
   font-family: inherit;
   cursor: pointer;
@@ -221,7 +218,6 @@ button {
   text-align: center;
 }
 
-/* Inputs */
 .form-group {
   margin-bottom: 24px;
 }
@@ -292,7 +288,6 @@ input[type="text"]:focus {
   text-align: right;
 }
 
-/* Global Status */
 .global-status {
   margin-top: 32px;
   display: flex;
@@ -328,7 +323,6 @@ input[type="text"]:focus {
   box-shadow: 0 0 8px rgba(0, 200, 106, 0.5);
 }
 
-/* Game Screen */
 .hud {
   display: flex;
   justify-content: space-between;
@@ -384,7 +378,6 @@ input[type="text"]:focus {
 
 .word-card.flash-pass #currentWord { color: #fff; }
 
-/* Countdown & Result */
 .big-num {
   font-family: 'Outfit', sans-serif;
   font-size: 8rem;

@@ -1,5 +1,5 @@
 // ================================
-// 🎭 CHARADES — SWISS DESIGN UPDATE
+// 🎭 CHARADES — DARK UI FINAL
 // ================================
 
 const SUPABASE_URL = "https://wcgxbgjnamybcbtfjiyo.supabase.co"; 
@@ -8,11 +8,9 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let DECKS = {};
-// Muted colors based on your feedback
-let DECK_COLORS = ['blue', 'green', 'peach', 'purple', 'yellow'];
 
 let state = {
-  category: "", timeLimit: 300, timeLeft: 300, score: 0,
+  category: "", timeLimit: 120, timeLeft: 120, score: 0,
   currentWord: "", usedWords: [], history: [], timerInterval: null,
   isPlaying: false, motionEnabled: false, lastTiltTime: 0, baselineBeta: 0
 };
@@ -130,35 +128,51 @@ function renderDeckGrid() {
   const keys = Object.keys(DECKS);
   
   if (keys.length === 0) {
-    els.deckGrid.innerHTML = "<div class='empty-state'>No decks. Create one below!</div>";
+    els.deckGrid.innerHTML = "<div class='empty-state'>No decks. Create one!</div>";
   }
 
   keys.forEach((key, index) => {
     let displayName = key.split('_').slice(2).join(' ');
     displayName = displayName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     
-    const colorClass = DECK_COLORS[index % DECK_COLORS.length];
+    const card = document.createElement("div");
+    card.className = `deck-card`;
+    card.dataset.key = key;
     
-    const tile = document.createElement("div");
-    tile.className = `deck-tile ${colorClass}`;
-    tile.dataset.key = key;
-    
-    if (state.category === key) tile.classList.add("active");
+    if (state.category === key) card.classList.add("active");
 
-    // Simplified, no icons
-    tile.innerHTML = `
-      <span class="name">${displayName}</span>
-      <span class="count">${DECKS[key].length} cards</span>
+    card.innerHTML = `
+      <div>
+        <div class="name">${displayName}</div>
+        <div class="count">${DECKS[key].length} cards</div>
+      </div>
     `;
 
-    tile.addEventListener("click", () => {
-      document.querySelectorAll('.deck-tile').forEach(c => c.classList.remove("active"));
-      tile.classList.add("active");
+    card.addEventListener("click", () => {
+      document.querySelectorAll('.deck-card').forEach(c => c.classList.remove("active"));
+      card.classList.add("active");
       state.category = key;
     });
 
-    els.deckGrid.appendChild(tile);
+    els.deckGrid.appendChild(card);
   });
+  
+  // Add custom deck button to grid
+  const customCard = document.createElement("div");
+  customCard.className = `deck-card custom`;
+  customCard.innerHTML = `
+    <div>
+      <div class="name">+ Custom</div>
+      <div class="count">Create new</div>
+    </div>
+  `;
+  customCard.addEventListener("click", () => {
+    els.customDeckName.value = "";
+    currentTags = [];
+    renderTags();
+    showScreen("createDeck");
+  });
+  els.deckGrid.appendChild(customCard);
 }
 
 // ☁️ SAVE DECK
@@ -191,7 +205,6 @@ els.saveDeckBtn.addEventListener("click", async () => {
 });
 
 // 🎯 NAVIGATION & PERMISSIONS
-// The new Create Deck button on the home screen
 els.createDeckBtn.addEventListener("click", () => {
   els.customDeckName.value = "";
   currentTags = [];
@@ -219,7 +232,7 @@ function enableTilt() {
   window.addEventListener("deviceorientation", handleTilt);
 }
 
-// 🎯 TILT LOGIC (Now with 35 degree threshold!)
+// 🎯 TILT LOGIC
 function handleTilt(event) {
   if (event.beta === null) return;
   if (!state.isPlaying) { state.baselineBeta = event.beta; return; }

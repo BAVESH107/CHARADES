@@ -17,8 +17,7 @@
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <!-- CSS LINK (Make sure this matches your filename exactly) -->
-  <link rel="stylesheet" href="styles.css?v=19" />
+  <link rel="stylesheet" href="styles.css?v=20" />
 </head>
 <body>
   <div class="app">
@@ -33,7 +32,6 @@
         <label>Pick a deck</label>
       </div>
 
-      <!-- Deck Grid -->
       <div id="deckGrid" class="deck-grid">
         <div class="empty-state">Loading decks...</div>
       </div>
@@ -42,13 +40,13 @@
         <label>Round length</label>
       </div>
 
-      <!-- Segmented Control -->
+      <!-- Segmented Control (1 min, 2 min, 3 min) -->
       <div class="segmented-control" id="timeLimitGroup">
-        <button class="segment" data-value="120">2 min</button>
-        <button class="segment active" data-value="300">5 min</button>
-        <button class="segment" data-value="360">6 min</button>
+        <button class="segment" data-value="60">1 min</button>
+        <button class="segment active" data-value="120">2 min</button>
+        <button class="segment" data-value="180">3 min</button>
       </div>
-      <input type="hidden" id="timeLimit" value="300" />
+      <input type="hidden" id="timeLimit" value="120" />
 
       <div class="action-area">
         <button id="startBtn" class="primary-btn">
@@ -91,7 +89,7 @@
     <!-- SCREEN 4: GAME -->
     <div id="game" class="screen">
       <div class="hud">
-        <span id="timer" class="timer">300</span>
+        <span id="timer" class="timer">120</span>
         <span id="scoreDisplay" class="score">0 pts</span>
       </div>
       
@@ -131,6 +129,6 @@
 
   </div>
 
-  <script src="app.js?v=19"></script>
+  <script src="app.js?v=20"></script>
 </body>
 </html>
