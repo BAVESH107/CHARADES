@@ -216,14 +216,11 @@ window.editDeck = async function(key) {
   const deckId = key.split('_')[1];
   const oldWords = DECKS[key];
   
-  // Use a prompt to ask for new words (simplest way without building a whole modal)
-  // We join the array with commas so they can edit it as a string
+  // Use a prompt to ask for new words
   const newWordsString = prompt("Edit your cards (separated by commas):", oldWords.join(", "));
   
-  // If user clicked cancel, newWordsString will be null
   if (newWordsString === null) return; 
 
-  // Parse the new string back into an array
   const newWordsArray = newWordsString.split(",").map(w => w.trim()).filter(w => w !== "");
   
   if (newWordsArray.length < 3) {
@@ -232,12 +229,21 @@ window.editDeck = async function(key) {
   }
 
   try {
-    const { error } = await dbClient.from('decks').update({ words: newWordsArray }).eq('id', deckId);
+    // 👇 THE FIX: We added .select() at the end to force Supabase to return the updated data!
+    const { data, error } = await dbClient
+      .from('decks')
+      .update({ words: newWordsArray })
+      .eq('id', deckId)
+      .select(); 
+
     if (error) throw error;
     
-    await loadCloudDecks(); // Refresh grid
+    // Force a reload of the decks from the server
+    await loadCloudDecks(); 
+    
+    alert("Deck updated successfully!");
   } catch (err) {
-    console.error(err);
+    console.error("Update Error:", err);
     alert("Failed to update deck. Check connection.");
   }
 }
