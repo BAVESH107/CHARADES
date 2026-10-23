@@ -141,7 +141,21 @@ function renderDeckGrid() {
     
     if (state.category === key) card.classList.add("active");
 
+    // Add edit and delete buttons for CLOUD decks
+    const isCloudDeck = key.startsWith("cloud_");
+    const buttonsHtml = isCloudDeck ? `
+      <div class="deck-actions">
+        <button class="action-icon" onclick="event.stopPropagation(); editDeck('${key}')" title="Edit">
+          <i class="ph ph-pencil-simple"></i>
+        </button>
+        <button class="action-icon delete" onclick="event.stopPropagation(); deleteDeck('${key}')" title="Delete">
+          <i class="ph ph-trash"></i>
+        </button>
+      </div>
+    ` : '';
+
     card.innerHTML = `
+      ${buttonsHtml}
       <div>
         <div class="name">${displayName}</div>
         <div class="count">${DECKS[key].length} cards</div>
@@ -173,6 +187,59 @@ function renderDeckGrid() {
     showScreen("createDeck");
   });
   els.deckGrid.appendChild(customCard);
+}
+
+// ================================
+// ✏️ EDIT & DELETE LOGIC
+// ================================
+
+window.deleteDeck = async function(key) {
+  const deckId = key.split('_')[1]; // Extract ID from 'cloud_123_name'
+  
+  if (!confirm("Are you sure you want to delete this deck? This cannot be undone.")) return;
+
+  try {
+    const { error } = await dbClient.from('decks').delete().eq('id', deckId);
+    if (error) throw error;
+    
+    // If we deleted the currently selected deck, clear selection
+    if (state.category === key) state.category = "";
+    
+    await loadCloudDecks(); // Refresh grid
+  } catch (err) {
+    console.error(err);
+    alert("Failed to delete deck. Check connection.");
+  }
+}
+
+window.editDeck = async function(key) {
+  const deckId = key.split('_')[1];
+  const oldWords = DECKS[key];
+  
+  // Use a prompt to ask for new words (simplest way without building a whole modal)
+  // We join the array with commas so they can edit it as a string
+  const newWordsString = prompt("Edit your cards (separated by commas):", oldWords.join(", "));
+  
+  // If user clicked cancel, newWordsString will be null
+  if (newWordsString === null) return; 
+
+  // Parse the new string back into an array
+  const newWordsArray = newWordsString.split(",").map(w => w.trim()).filter(w => w !== "");
+  
+  if (newWordsArray.length < 3) {
+    alert("You need at least 3 cards!");
+    return;
+  }
+
+  try {
+    const { error } = await dbClient.from('decks').update({ words: newWordsArray }).eq('id', deckId);
+    if (error) throw error;
+    
+    await loadCloudDecks(); // Refresh grid
+  } catch (err) {
+    console.error(err);
+    alert("Failed to update deck. Check connection.");
+  }
 }
 
 // ☁️ SAVE DECK

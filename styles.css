@@ -484,3 +484,36 @@ input[type="text"]:focus {
   border-radius: var(--radius);
   border: 2px dashed var(--border);
 }
+.deck-card{
+  position: relative;
+  padding-right: 40px;
+}
+
+.deck-actions{
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.action-icon{
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.action-icon:hover{
+  background: var(--border);
+  color: var(--text-main);
+}
+.action-icon.delete:hover{
+  color: var(--coral);
+  background: rgba(255, 85, 85, 0.1);
+}
